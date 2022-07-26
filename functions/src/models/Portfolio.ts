@@ -1,5 +1,5 @@
-import uuid from "uuid/v4";
-import nanoid from "nanoid";
+import { v4 as uuid } from "uuid";
+import { nanoid } from "nanoid";
 import Component from "./Component";
 import { STATUS_ACTIVE } from "~utils/constants";
 import portfolioSchema from "~schemas/PortfolioSchema";
@@ -42,7 +42,7 @@ class Portfolio {
       this.title = validatedPayload.title;
       this.description = validatedPayload.description;
       this.components = validatedPayload.components.map(
-        componentSchema => new Component(componentSchema),
+        (componentSchema) => new Component(componentSchema),
       );
       this.status = validatedPayload.status;
       this.createdAt = validatedPayload.createdAt;
@@ -52,7 +52,7 @@ class Portfolio {
     }
   }
 
-  private validate = payload => {
+  private validate = (payload) => {
     try {
       return portfolioSchema().validateSync(payload, {
         abortEarly: true,

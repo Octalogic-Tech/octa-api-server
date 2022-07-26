@@ -25,36 +25,26 @@ export const addPortfolio = async (
   description?: string,
 ) => {
   try {
-    const componentRefs = components.map(component =>
-      getDb()
-        .collection("components")
-        .doc(component.id),
+    const componentRefs = components.map((component) =>
+      getDb().collection("components").doc(component.id),
     );
 
     const { categoryId, componentId, projectId, technologyId } = payload;
 
-    const payloadComponentRefs = componentId.map(component =>
-      getDb()
-        .collection("components")
-        .doc(component),
+    const payloadComponentRefs = componentId.map((component) =>
+      getDb().collection("components").doc(component),
     );
 
-    const payloadCategoryRefs = categoryId.map(category =>
-      getDb()
-        .collection("categories")
-        .doc(category),
+    const payloadCategoryRefs = categoryId.map((category) =>
+      getDb().collection("categories").doc(category),
     );
 
-    const payloadProjectRefs = projectId.map(project =>
-      getDb()
-        .collection("projects")
-        .doc(project),
+    const payloadProjectRefs = projectId.map((project) =>
+      getDb().collection("projects").doc(project),
     );
 
-    const payloadTechnologyRefs = technologyId.map(technology =>
-      getDb()
-        .collection("technologies")
-        .doc(technology),
+    const payloadTechnologyRefs = technologyId.map((technology) =>
+      getDb().collection("technologies").doc(technology),
     );
 
     const refs = {
@@ -66,10 +56,7 @@ export const addPortfolio = async (
 
     const insertObj = Portfolio.init(title, componentRefs, refs, description);
 
-    await getDb()
-      .collection("portfolios")
-      .doc(insertObj.id)
-      .set(insertObj);
+    await getDb().collection("portfolios").doc(insertObj.id).set(insertObj);
 
     return {
       id: insertObj.id,
@@ -111,10 +98,8 @@ export const updatePortfolio = async (
       obj.description = description;
     }
 
-    const componentRefs = components.map(component =>
-      getDb()
-        .collection("components")
-        .doc(component.id),
+    const componentRefs = components.map((component) =>
+      getDb().collection("components").doc(component.id),
     );
 
     obj.components = componentRefs;
@@ -125,28 +110,20 @@ export const updatePortfolio = async (
 
     const { categoryId, componentId, projectId, technologyId } = payload;
 
-    const payloadComponentRefs = componentId.map(component =>
-      getDb()
-        .collection("components")
-        .doc(component),
+    const payloadComponentRefs = componentId.map((component) =>
+      getDb().collection("components").doc(component),
     );
 
-    const payloadCategoryRefs = categoryId.map(category =>
-      getDb()
-        .collection("categories")
-        .doc(category),
+    const payloadCategoryRefs = categoryId.map((category) =>
+      getDb().collection("categories").doc(category),
     );
 
-    const payloadProjectRefs = projectId.map(project =>
-      getDb()
-        .collection("projects")
-        .doc(project),
+    const payloadProjectRefs = projectId.map((project) =>
+      getDb().collection("projects").doc(project),
     );
 
-    const payloadTechnologyRefs = technologyId.map(technology =>
-      getDb()
-        .collection("technologies")
-        .doc(technology),
+    const payloadTechnologyRefs = technologyId.map((technology) =>
+      getDb().collection("technologies").doc(technology),
     );
 
     const refs = {
@@ -158,10 +135,7 @@ export const updatePortfolio = async (
 
     obj.refs = refs;
 
-    await getDb()
-      .collection("portfolios")
-      .doc(portfolioId)
-      .update(obj);
+    await getDb().collection("portfolios").doc(portfolioId).update(obj);
 
     return {
       id: portfolioId,
@@ -182,10 +156,7 @@ export const updatePortfolio = async (
  */
 export const fetchPortFolio = async (portfolioId: string, fetchDetails: boolean = false) => {
   try {
-    const portfolio = await getDb()
-      .collection("portfolios")
-      .doc(portfolioId)
-      .get();
+    const portfolio = await getDb().collection("portfolios").doc(portfolioId).get();
 
     if (!portfolio.exists || (portfolio.exists && portfolio.data().status !== STATUS_ACTIVE))
       throw entityNotFoundError("Portfolio does not exist");
@@ -210,7 +181,7 @@ export const fetchPublicPortfolio = async (portfolioCode: string) => {
       .where("code", "==", portfolioCode)
       .get();
 
-    const promises = portfoliosQuery.docs.map(item => parseRow(item.data(), true, true));
+    const promises = portfoliosQuery.docs.map((item) => parseRow(item.data(), true, true));
     const portfolios = await Promise.all(promises);
 
     if (portfolios.length !== 1) {
@@ -241,7 +212,7 @@ export const fetchPortFolios = async () => {
       .where("status", "==", STATUS_ACTIVE)
       .get();
 
-    const promises = portfolios.docs.map(item => parseRow(item.data()));
+    const promises = portfolios.docs.map((item) => parseRow(item.data()));
 
     return await Promise.all(promises);
   } catch (error) {
@@ -258,13 +229,10 @@ export const fetchPortFolios = async () => {
  */
 export const archivePortFolio = async (portfolioId: string) => {
   try {
-    await getDb()
-      .collection("portfolios")
-      .doc(portfolioId)
-      .update({
-        status: STATUS_INACTIVE,
-        updatedAt: new Date(),
-      });
+    await getDb().collection("portfolios").doc(portfolioId).update({
+      status: STATUS_INACTIVE,
+      updatedAt: new Date(),
+    });
 
     return {
       id: portfolioId,

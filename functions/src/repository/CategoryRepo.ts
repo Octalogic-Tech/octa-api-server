@@ -17,10 +17,7 @@ export const addCategory = async (name: string, icon?: IIcon) => {
   try {
     const obj = Category.init(name, icon);
 
-    await getDb()
-      .collection("categories")
-      .doc(obj.id)
-      .set(obj);
+    await getDb().collection("categories").doc(obj.id).set(obj);
     return {
       id: obj.id,
       message: "Successfully Added",
@@ -48,10 +45,7 @@ export const updateCategory = async (id: string, name: string, icon?: IIcon) => 
 
     if (icon) updateObj.icon = icon;
 
-    await getDb()
-      .collection("categories")
-      .doc(id)
-      .update(updateObj);
+    await getDb().collection("categories").doc(id).update(updateObj);
     return {
       id,
       message: "Successfully Updated",
@@ -70,13 +64,10 @@ export const updateCategory = async (id: string, name: string, icon?: IIcon) => 
  */
 export const archiveCategory = async (id: string) => {
   try {
-    await getDb()
-      .collection("categories")
-      .doc(id)
-      .update({
-        status: STATUS_INACTIVE,
-        updatedAt: new Date(),
-      });
+    await getDb().collection("categories").doc(id).update({
+      status: STATUS_INACTIVE,
+      updatedAt: new Date(),
+    });
     return {
       id,
       message: "Successfully Archived",
@@ -99,7 +90,7 @@ export const fetchCategories = async () => {
       .where("status", "==", STATUS_ACTIVE)
       .get();
 
-    return categories.docs.map(category => parseRow(category.data()));
+    return categories.docs.map((category) => parseRow(category.data()));
   } catch (error) {
     throw parseDbError(error);
   }
@@ -114,10 +105,7 @@ export const fetchCategories = async () => {
  */
 export const fetchCategory = async (categoryId: string) => {
   try {
-    const category = await getDb()
-      .collection("categories")
-      .doc(categoryId)
-      .get();
+    const category = await getDb().collection("categories").doc(categoryId).get();
 
     if (!category.exists || (category.exists && category.data().status !== STATUS_ACTIVE))
       throw entityNotFoundError("Category does not exist");

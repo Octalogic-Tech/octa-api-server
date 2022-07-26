@@ -16,10 +16,7 @@ export const addClient = async (name: string, address?: string) => {
   try {
     const insertObj = Client.init(name, address);
 
-    await getDb()
-      .collection("clients")
-      .doc(insertObj.id)
-      .set(insertObj);
+    await getDb().collection("clients").doc(insertObj.id).set(insertObj);
     return {
       id: insertObj.id,
       message: "Successfully Added",
@@ -40,14 +37,11 @@ export const addClient = async (name: string, address?: string) => {
  */
 export const updateClient = async (id: string, name: string, address?: string) => {
   try {
-    await getDb()
-      .collection("clients")
-      .doc(id)
-      .update({
-        name,
-        address,
-        updatedAt: new Date(),
-      });
+    await getDb().collection("clients").doc(id).update({
+      name,
+      address,
+      updatedAt: new Date(),
+    });
     return {
       id,
       message: "Successfully Updated",
@@ -67,13 +61,10 @@ export const updateClient = async (id: string, name: string, address?: string) =
 export const archiveClient = async (id: string) => {
   try {
     // TODO: check if client is attachd to any projects which are active, do not archive until then
-    await getDb()
-      .collection("clients")
-      .doc(id)
-      .update({
-        status: STATUS_INACTIVE,
-        updatedAt: new Date(),
-      });
+    await getDb().collection("clients").doc(id).update({
+      status: STATUS_INACTIVE,
+      updatedAt: new Date(),
+    });
     return {
       id,
       message: "Successfully Archived",
@@ -92,10 +83,7 @@ export const archiveClient = async (id: string) => {
  */
 export const fetchClient = async (clientId: string) => {
   try {
-    const client = await getDb()
-      .collection("clients")
-      .doc(clientId)
-      .get();
+    const client = await getDb().collection("clients").doc(clientId).get();
 
     if (!client.exists || (client.exists && client.data().status !== STATUS_ACTIVE))
       throw entityNotFoundError("Client does not exist");
@@ -114,12 +102,9 @@ export const fetchClient = async (clientId: string) => {
  */
 export const fetchClients = async () => {
   try {
-    const clients = await getDb()
-      .collection("clients")
-      .where("status", "==", STATUS_ACTIVE)
-      .get();
+    const clients = await getDb().collection("clients").where("status", "==", STATUS_ACTIVE).get();
 
-    return clients.docs.map(client => parseRow(client.data()));
+    return clients.docs.map((client) => parseRow(client.data()));
   } catch (error) {
     throw parseDbError(error);
   }

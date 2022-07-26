@@ -153,7 +153,7 @@ export default class ProjectController {
 
       let coverImage: IMulterFileUpload;
       // check if the necesarry files have been uploaded
-      files.forEach(file => {
+      files.forEach((file) => {
         if (file.fieldname === "cover") coverImage = file;
       });
 
@@ -220,7 +220,7 @@ export default class ProjectController {
 
       let logoImage: IMulterFileUpload;
       // check if the necesarry files have been uploaded
-      files.forEach(file => {
+      files.forEach((file) => {
         if (file.fieldname === "logo") logoImage = file;
       });
 
@@ -294,7 +294,7 @@ export default class ProjectController {
 
       let galleryImage: IMulterFileUpload;
       // check if the necesarry files have been uploaded
-      files.forEach(file => {
+      files.forEach((file) => {
         if (file.fieldname === "gallery") galleryImage = file;
       });
 
@@ -330,7 +330,7 @@ export default class ProjectController {
       const project = await fetchProject(projectId);
 
       const galleryItemArr = project.gallery.filter(
-        galleryItem => galleryItem.id === galleryImageId,
+        (galleryItem) => galleryItem.id === galleryImageId,
       );
 
       if (galleryItemArr.length <= 0) {

@@ -1,4 +1,4 @@
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import Category from "./Category";
 import schema from "~schemas/TechnologySchema";
 import { STATUS_ACTIVE } from "~utils/constants";
@@ -47,7 +47,7 @@ class Technology {
     this.updatedAt = validatedPayload.updatedAt;
   }
 
-  private validate = payload => {
+  private validate = (payload) => {
     try {
       return schema().validateSync(payload);
     } catch (error) {
