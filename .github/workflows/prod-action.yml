@@ -1,8 +1,12 @@
 name: ReleaseDeployment
 
 on:
+  push:
+    branches:
+      - "master"
   pull_request:
-    branches: master
+    branches:
+      - "master"
     types: [closed]
 
 jobs:
