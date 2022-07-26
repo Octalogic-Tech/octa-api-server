@@ -32,7 +32,7 @@ export default class PortfolioController {
       try {
         parsedPayload = portfolioPayloadSchema().validateSync(payload, {
           abortEarly: true,
-        }) as IPortfolioPayload;
+        }) as unknown as IPortfolioPayload;
 
         if (
           parsedPayload.componentId.length <= 0 &&
@@ -90,7 +90,7 @@ export default class PortfolioController {
       try {
         parsedPayload = portfolioPayloadSchema().validateSync(payload, {
           abortEarly: true,
-        }) as IPortfolioPayload;
+        }) as unknown as IPortfolioPayload;
 
         if (
           parsedPayload.componentId.length <= 0 &&

@@ -42,7 +42,7 @@ export const parseCookies = (cookiePayload: string) => {
   const list = [];
 
   if (cookiePayload && cookiePayload.length > 0) {
-    cookiePayload.split(";").forEach(cookie => {
+    cookiePayload.split(";").forEach((cookie) => {
       const parts = cookie.split("=");
       list[parts.shift().trim()] = decodeURI(parts.join("="));
     });

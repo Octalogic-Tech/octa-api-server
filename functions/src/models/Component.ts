@@ -1,4 +1,4 @@
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import admin from "firebase-admin";
 import Category from "./Category";
 import Project from "./Project";
@@ -82,7 +82,7 @@ class Component {
       this.logo = validatedPayload.logo;
       this.category = new Category(validatedPayload.category);
       this.project = new Project(validatedPayload.project);
-      this.technology = validatedPayload.technology.map(technology => new Technology(technology));
+      this.technology = validatedPayload.technology.map((technology) => new Technology(technology));
       this.gallery = validatedPayload.gallery;
       this.links = validatedPayload.links;
       this.createdAt = validatedPayload.createdAt;
@@ -92,7 +92,7 @@ class Component {
     }
   }
 
-  private validate = payload => {
+  private validate = (payload) => {
     try {
       return componentSchema().validateSync(payload, {
         abortEarly: true,

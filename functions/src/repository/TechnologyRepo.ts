@@ -22,26 +22,13 @@ export const addTechnology = async (
   icon?: IIcon,
 ) => {
   try {
-    const obj = Technology.init(
-      name,
-      getDb()
-        .collection("categories")
-        .doc(categoryId),
-      link,
-      icon,
-    );
+    const obj = Technology.init(name, getDb().collection("categories").doc(categoryId), link, icon);
 
-    const category = await getDb()
-      .collection("categories")
-      .doc(categoryId)
-      .get();
+    const category = await getDb().collection("categories").doc(categoryId).get();
 
     if (!category.exists) throw entityNotFoundError("Category not found");
 
-    await getDb()
-      .collection("technologies")
-      .doc(obj.id)
-      .set(obj);
+    await getDb().collection("technologies").doc(obj.id).set(obj);
     return {
       id: obj.id,
       message: "Successfully Added",
@@ -70,18 +57,13 @@ export const updateTechnology = async (
   icon?: IIcon,
 ) => {
   try {
-    const category = await getDb()
-      .collection("categories")
-      .doc(categoryId)
-      .get();
+    const category = await getDb().collection("categories").doc(categoryId).get();
 
     if (!category.exists) throw entityNotFoundError("Category not found");
 
     const obj: any = {
       name,
-      category: getDb()
-        .collection("categories")
-        .doc(categoryId),
+      category: getDb().collection("categories").doc(categoryId),
       updatedAt: new Date(),
     };
 
@@ -89,10 +71,7 @@ export const updateTechnology = async (
 
     if (icon) obj.icon = icon;
 
-    await getDb()
-      .collection("technologies")
-      .doc(id)
-      .update(obj);
+    await getDb().collection("technologies").doc(id).update(obj);
     return {
       id,
       message: "Successfully Updated",
@@ -111,13 +90,10 @@ export const updateTechnology = async (
  */
 export const archiveTechnology = async (id: string) => {
   try {
-    await getDb()
-      .collection("technologies")
-      .doc(id)
-      .update({
-        status: STATUS_INACTIVE,
-        updatedAt: new Date(),
-      });
+    await getDb().collection("technologies").doc(id).update({
+      status: STATUS_INACTIVE,
+      updatedAt: new Date(),
+    });
     return {
       id,
       message: "Successfully Archived",
@@ -140,7 +116,7 @@ export const fetchTechnologies = async () => {
       .where("status", "==", STATUS_ACTIVE)
       .get();
 
-    const result = await Promise.all(technologies.docs.map(row => parseRow(row.data())));
+    const result = await Promise.all(technologies.docs.map((row) => parseRow(row.data())));
 
     return result;
   } catch (error) {

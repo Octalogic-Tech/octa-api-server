@@ -29,9 +29,7 @@ export const addProject = async (
   currency?: string,
 ) => {
   try {
-    const clientRef = getDb()
-      .collection("clients")
-      .doc(clientId);
+    const clientRef = getDb().collection("clients").doc(clientId);
 
     const insertObj = Project.init(name, clientRef);
 
@@ -40,10 +38,7 @@ export const addProject = async (
     if (cost) insertObj.cost = cost;
     if (currency) insertObj.currency = currency;
 
-    await getDb()
-      .collection("projects")
-      .doc(insertObj.id)
-      .set(insertObj);
+    await getDb().collection("projects").doc(insertObj.id).set(insertObj);
     return {
       id: insertObj.id,
       message: "Successfully Added",
@@ -80,9 +75,7 @@ export const updateProject = async (
 
     if (name) obj.name = name;
     if (clientId) {
-      obj.client = getDb()
-        .collection("clients")
-        .doc(clientId);
+      obj.client = getDb().collection("clients").doc(clientId);
     }
     if (startDate) obj.startDate = startDate;
     if (endDate) obj.endDate = endDate;
@@ -92,10 +85,7 @@ export const updateProject = async (
     if (Object.keys(obj).length > 0) {
       obj.updatedAt = new Date();
 
-      await getDb()
-        .collection("projects")
-        .doc(projectId)
-        .update(obj);
+      await getDb().collection("projects").doc(projectId).update(obj);
     }
 
     return {
@@ -117,10 +107,7 @@ export const updateProject = async (
  */
 export const updatedCoverImage = async (projectId: string, file?: ICloudStorageUploadResponse) => {
   try {
-    const project = await getDb()
-      .collection("projects")
-      .doc(projectId)
-      .get();
+    const project = await getDb().collection("projects").doc(projectId).get();
 
     if (!project.exists || (project.exists && project.data().status !== STATUS_ACTIVE))
       throw entityNotFoundError("Project does not exist");
@@ -146,13 +133,10 @@ export const updatedCoverImage = async (projectId: string, file?: ICloudStorageU
       };
     } else {
       // delete cover image
-      await getDb()
-        .collection("projects")
-        .doc(projectId)
-        .update({
-          cover: null,
-          updatedAt: new Date(),
-        });
+      await getDb().collection("projects").doc(projectId).update({
+        cover: null,
+        updatedAt: new Date(),
+      });
 
       return {
         message: "Successfully deleted",
@@ -235,10 +219,7 @@ export const deleteGalleryImage = async (projectId: string, galleryItem: IGaller
  */
 export const updatedLogoImage = async (projectId: string, file?: ICloudStorageUploadResponse) => {
   try {
-    const project = await getDb()
-      .collection("projects")
-      .doc(projectId)
-      .get();
+    const project = await getDb().collection("projects").doc(projectId).get();
 
     if (!project.exists || (project.exists && project.data().status !== STATUS_ACTIVE))
       throw entityNotFoundError("Project does not exist");
@@ -264,13 +245,10 @@ export const updatedLogoImage = async (projectId: string, file?: ICloudStorageUp
       };
     } else {
       // delete logo image
-      await getDb()
-        .collection("projects")
-        .doc(projectId)
-        .update({
-          logo: null,
-          updatedAt: new Date(),
-        });
+      await getDb().collection("projects").doc(projectId).update({
+        logo: null,
+        updatedAt: new Date(),
+      });
 
       return {
         message: "Successfully deleted",
@@ -295,7 +273,7 @@ export const fetchAllProjects = async (isPublic: boolean = false) => {
       .where("status", "==", STATUS_ACTIVE)
       .get();
 
-    const promises = projects.docs.map(project => parseRow(project.data(), isPublic));
+    const promises = projects.docs.map((project) => parseRow(project.data(), isPublic));
 
     return await Promise.all(promises);
   } catch (error) {
@@ -313,10 +291,7 @@ export const fetchAllProjects = async (isPublic: boolean = false) => {
  */
 export const fetchProject = async (projectId: string, isPublic: boolean = false) => {
   try {
-    const project = await getDb()
-      .collection("projects")
-      .doc(projectId)
-      .get();
+    const project = await getDb().collection("projects").doc(projectId).get();
 
     if (!project.exists || (project.exists && project.data().status !== STATUS_ACTIVE))
       throw entityNotFoundError("Project does not exist");
@@ -336,13 +311,10 @@ export const fetchProject = async (projectId: string, isPublic: boolean = false)
  */
 export const archiveProject = async (projectId: string) => {
   try {
-    await getDb()
-      .collection("projects")
-      .doc(projectId)
-      .update({
-        status: STATUS_INACTIVE,
-        updatedAt: new Date(),
-      });
+    await getDb().collection("projects").doc(projectId).update({
+      status: STATUS_INACTIVE,
+      updatedAt: new Date(),
+    });
 
     return {
       id: projectId,
