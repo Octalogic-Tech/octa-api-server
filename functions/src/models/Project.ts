@@ -1,4 +1,4 @@
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import admin = require("firebase-admin");
 import Client from "./Client";
 import projectSchema from "~schemas/ProjectSchema";
@@ -78,7 +78,7 @@ class Project {
     }
   }
 
-  private validate = payload => {
+  private validate = (payload) => {
     try {
       return projectSchema().validateSync(payload, {
         abortEarly: true,

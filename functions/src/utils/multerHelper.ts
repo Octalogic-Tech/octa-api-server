@@ -15,9 +15,9 @@ export const receiveFiles = (
 ): Promise<IMulterFileUpload[]> => {
   try {
     return new Promise((resolve, reject) =>
-      multerParser(req, res, err => {
+      multerParser(req, res, (err) => {
         if (err) reject(err);
-        else resolve((req.files as unknown) as IMulterFileUpload[]);
+        else resolve(req.files as unknown as IMulterFileUpload[]);
       }),
     );
   } catch (error) {

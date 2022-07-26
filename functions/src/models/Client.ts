@@ -1,4 +1,4 @@
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import clientSchema from "~schemas/ClientSchema";
 import { STATUS_ACTIVE } from "~utils/constants";
 
@@ -31,7 +31,7 @@ class Client {
     this.updatedAt = validatedPayload.updatedAt;
   }
 
-  private validate = payload => {
+  private validate = (payload) => {
     try {
       return clientSchema().validateSync(payload);
     } catch (error) {

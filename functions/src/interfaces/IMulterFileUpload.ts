@@ -3,6 +3,6 @@ export interface IMulterFileUpload {
   originalname: string; // name of the file
   mimetype: string; // mimetype of the file
   encoding: string; // encoding of the file, e.g. 7bit
-  buffer: void; // the file
+  buffer: Buffer; // the file
   size: number; // size of the file
 }

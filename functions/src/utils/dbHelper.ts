@@ -1,7 +1,7 @@
 import APIError from "./APIError";
 import { HTTP_NOT_FOUND, HTTP_INTERNAL_SERVER_ERROR } from "./http_code";
 
-export const parseDbError = error => {
+export const parseDbError = (error) => {
   switch (error.code) {
     case 5:
       return new APIError("Entity not found", error.stack, HTTP_NOT_FOUND);
@@ -11,7 +11,7 @@ export const parseDbError = error => {
   }
 };
 
-const handleGenericError = error => {
+const handleGenericError = (error) => {
   if (error instanceof APIError) {
     // error has already been generated, return as is
     throw error;

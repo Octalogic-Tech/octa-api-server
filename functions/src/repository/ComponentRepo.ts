@@ -36,18 +36,12 @@ export const addComponent = async (
   description?: string,
 ) => {
   try {
-    const projectRef = getDb()
-      .collection("projects")
-      .doc(projectId);
+    const projectRef = getDb().collection("projects").doc(projectId);
 
-    const categoryRef = getDb()
-      .collection("categories")
-      .doc(categoryId);
+    const categoryRef = getDb().collection("categories").doc(categoryId);
 
-    const technologyRef: FirebaseFirestore.DocumentReference[] = technologyIds.map(technology =>
-      getDb()
-        .collection("technologies")
-        .doc(technology),
+    const technologyRef: FirebaseFirestore.DocumentReference[] = technologyIds.map((technology) =>
+      getDb().collection("technologies").doc(technology),
     );
 
     const insertObj = Component.init(
@@ -60,10 +54,7 @@ export const addComponent = async (
       description,
     );
 
-    await getDb()
-      .collection("components")
-      .doc(insertObj.id)
-      .set(insertObj);
+    await getDb().collection("components").doc(insertObj.id).set(insertObj);
     return {
       id: insertObj.id,
       message: "Successfully Added",
@@ -121,17 +112,13 @@ export const updateComponent = async (
 
     if (categoryId) {
       shouldUpdate = true;
-      obj.category = getDb()
-        .collection("categories")
-        .doc(categoryId);
+      obj.category = getDb().collection("categories").doc(categoryId);
     }
 
     if (technologyIds && technologyIds.length > 0) {
       shouldUpdate = true;
-      obj.technology = technologyIds.map(technology =>
-        getDb()
-          .collection("technologies")
-          .doc(technology),
+      obj.technology = technologyIds.map((technology) =>
+        getDb().collection("technologies").doc(technology),
       );
     }
 
@@ -144,10 +131,7 @@ export const updateComponent = async (
       throw new APIError("No attributes specified for updation", undefined, HTTP_BAD_REQUEST);
     }
 
-    await getDb()
-      .collection("components")
-      .doc(componentId)
-      .update(obj);
+    await getDb().collection("components").doc(componentId).update(obj);
     return {
       id: componentId,
       message: "Successfully Updated",
@@ -167,9 +151,7 @@ export const updateComponent = async (
  */
 export const fetchComponents = async (projectId: string, isPublic: boolean = false) => {
   try {
-    const projectRef = getDb()
-      .collection("projects")
-      .doc(projectId);
+    const projectRef = getDb().collection("projects").doc(projectId);
 
     const components = await getDb()
       .collection("components")
@@ -177,7 +159,7 @@ export const fetchComponents = async (projectId: string, isPublic: boolean = fal
       .where("status", "==", STATUS_ACTIVE)
       .get();
 
-    const result = await Promise.all(components.docs.map(row => parseRow(row.data(), isPublic)));
+    const result = await Promise.all(components.docs.map((row) => parseRow(row.data(), isPublic)));
 
     return result;
   } catch (error) {
@@ -199,7 +181,7 @@ export const fetchComponentsForSelect = async () => {
       .get();
 
     const result = await Promise.all(
-      components.docs.map(row => {
+      components.docs.map((row) => {
         const item = row.data();
 
         return {
@@ -237,15 +219,11 @@ export const filterComponents = async (
     // fetch all components for the given component ids
     if (componentId && componentId.length > 0) {
       const refs: FirebaseFirestore.DocumentReference[] = [];
-      componentId.forEach(item => {
-        refs.push(
-          getDb()
-            .collection("components")
-            .doc(item),
-        );
+      componentId.forEach((item) => {
+        refs.push(getDb().collection("components").doc(item));
       });
 
-      const docsPromise = (await getDb().getAll(...refs)).map(async component =>
+      const docsPromise = (await getDb().getAll(...refs)).map(async (component) =>
         parseRow(component.data()),
       );
 
@@ -254,10 +232,8 @@ export const filterComponents = async (
 
     // fetch all components with the given project ids
     if (projectId && projectId.length > 0) {
-      const projectPromises = projectId.map(async item => {
-        const projectRef = getDb()
-          .collection("projects")
-          .doc(item);
+      const projectPromises = projectId.map(async (item) => {
+        const projectRef = getDb().collection("projects").doc(item);
 
         // fetch all components that have the given project id
         const components = await getDb()
@@ -266,59 +242,47 @@ export const filterComponents = async (
           .where("status", "==", STATUS_ACTIVE)
           .get();
 
-        return Promise.all(components.docs.map(row => parseRow(row.data())));
+        return Promise.all(components.docs.map((row) => parseRow(row.data())));
       });
 
       const projectComponents = await Promise.all(projectPromises);
-      projectComponents.map(projectComponent => {
+      projectComponents.map((projectComponent) => {
         result.push(...projectComponent);
       });
     }
 
     // filter all components with the given technology
     if (technologyId && technologyId.length > 0) {
-      const technologyComponentsPromises = technologyId.map(async item => {
+      const technologyComponentsPromises = technologyId.map(async (item) => {
         const components = await getDb()
           .collection("components")
-          .where(
-            "technology",
-            "array-contains",
-            getDb()
-              .collection("technologies")
-              .doc(item),
-          )
+          .where("technology", "array-contains", getDb().collection("technologies").doc(item))
           .where("status", "==", STATUS_ACTIVE)
           .get();
 
-        return Promise.all(components.docs.map(row => parseRow(row.data())));
+        return Promise.all(components.docs.map((row) => parseRow(row.data())));
       });
 
       const technologyComponents = await Promise.all(technologyComponentsPromises);
-      technologyComponents.map(technologyComponent => {
+      technologyComponents.map((technologyComponent) => {
         result.push(...technologyComponent);
       });
     }
 
     // filter all components with the given category
     if (categoryId && categoryId.length > 0) {
-      const categoryComponentsPromises = categoryId.map(async item => {
+      const categoryComponentsPromises = categoryId.map(async (item) => {
         const components = await getDb()
           .collection("components")
-          .where(
-            "category",
-            "==",
-            getDb()
-              .collection("categories")
-              .doc(item),
-          )
+          .where("category", "==", getDb().collection("categories").doc(item))
           .where("status", "==", STATUS_ACTIVE)
           .get();
 
-        return Promise.all(components.docs.map(row => parseRow(row.data())));
+        return Promise.all(components.docs.map((row) => parseRow(row.data())));
       });
 
       const categoryComponents = await Promise.all(categoryComponentsPromises);
-      categoryComponents.map(categoryComponent => {
+      categoryComponents.map((categoryComponent) => {
         result.push(...categoryComponent);
       });
     }
@@ -327,10 +291,10 @@ export const filterComponents = async (
 
     // filter to only have unique components
     const componentsObj = {};
-    result.forEach(component => {
+    result.forEach((component) => {
       componentsObj[`${component.id}`] = component;
     });
-    const filteredComponents: Component[] = Object.keys(componentsObj).map(key => {
+    const filteredComponents: Component[] = Object.keys(componentsObj).map((key) => {
       return componentsObj[key];
     });
 
@@ -349,10 +313,7 @@ export const filterComponents = async (
  */
 export const fetchComponent = async (componentId: string) => {
   try {
-    const component = await getDb()
-      .collection("components")
-      .doc(componentId)
-      .get();
+    const component = await getDb().collection("components").doc(componentId).get();
 
     if (!component.exists || (component.exists && component.data().status !== STATUS_ACTIVE))
       throw entityNotFoundError("Component does not exist");
@@ -397,13 +358,10 @@ export const updatedCoverImage = async (
       };
     } else {
       // delete cover image
-      await getDb()
-        .collection("components")
-        .doc(componentId)
-        .update({
-          cover: null,
-          updatedAt: new Date(),
-        });
+      await getDb().collection("components").doc(componentId).update({
+        cover: null,
+        updatedAt: new Date(),
+      });
 
       return {
         message: "Successfully deleted",

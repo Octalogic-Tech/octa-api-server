@@ -258,7 +258,7 @@ export default class ComponentController {
 
       let coverImage: IMulterFileUpload;
       // check if the necesarry files have been uploaded
-      files.forEach(file => {
+      files.forEach((file) => {
         if (file.fieldname === "cover") coverImage = file;
       });
 
@@ -334,7 +334,7 @@ export default class ComponentController {
 
       let galleryImage: IMulterFileUpload;
       // check if the necesarry files have been uploaded
-      files.forEach(file => {
+      files.forEach((file) => {
         if (file.fieldname === "gallery") galleryImage = file;
       });
 
@@ -379,7 +379,7 @@ export default class ComponentController {
       const component = await fetchComponent(componentId);
 
       const galleryItemArr = component.gallery.filter(
-        galleryItem => galleryItem.id === galleryImageId,
+        (galleryItem) => galleryItem.id === galleryImageId,
       );
 
       if (galleryItemArr.length <= 0) {

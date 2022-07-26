@@ -8,7 +8,7 @@ connectToServer();
 
 export const api = functions
   .runWith({
-    memory: "2GB",
+    memory: "1GB",
   })
   .region("asia-east2")
   .https.onRequest(server);
